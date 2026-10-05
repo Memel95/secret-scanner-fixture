@@ -1,0 +1,2 @@
+Synthetic address corresponding to fixtures/context/account.js:
+0x56b62aca6939d0dbb271383d650b5e0b09a8921b

@@ -1,0 +1,2 @@
+# One 96-hex token; no isolated 64-hex sub-match expected.
+0xa811ef2b57ee7747153d03c64a852588e848eb2e222a61a7f4fe02f28d4a9d4070101b2b47704acf9c408cb9693511c2

@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "repository": "Memel95/secret-scanner-fixture",
+  "data_origin": "Entirely deterministic synthetic public test data. No real credentials.",
+  "generation": {
+    "algorithm": "SHA-256(label) mod (secp256k1_order - 1) + 1",
+    "label_prefix": "Memel95/secret-scanner-fixture:v1:"
+  },
+  "expected_refs": [
+    "refs/heads/main",
+    "refs/heads/fixture/branch-only",
+    "refs/heads/fixture/pr-only",
+    "refs/tags/fixture-v1",
+    "refs/pull/1/head",
+    "refs/pull/1/merge"
+  ],
+  "cases": [
+    {
+      "id": "context",
+      "paths": [
+        "fixtures/context/service.env",
+        "fixtures/duplicates/service.env"
+      ],
+      "address": "0x3963bf1fb41497dd895bd357c851af667d23c4ff",
+      "assertion": "same bytes / one unique blob / one address, multiple path provenance"
+    },
+    {
+      "id": "ambiguous",
+      "paths": [
+        "fixtures/ambiguous/standalone.txt"
+      ],
+      "address": "0x712e6fee76d2431821332a4eeee6a810d0c25fbe",
+      "assertion": "unlabelled standalone candidate; classification depends on scanner policy"
+    },
+    {
+      "id": "account_api",
+      "paths": [
+        "fixtures/context/account.js",
+        "fixtures/addresses/derived.txt"
+      ],
+      "address": "0x56b62aca6939d0dbb271383d650b5e0b09a8921b",
+      "assertion": "API context and derived_address_literal_match across separate blobs"
+    },
+    {
+      "id": "history_deleted",
+      "paths": [
+        "fixtures/history/deleted.env"
+      ],
+      "address": "0x2fd78ab24b3407b9c774a7c0d4fc9bfd60c75619",
+      "assertion": "absent from main HEAD; reachable from historical commit and tag"
+    },
+    {
+      "id": "large_split",
+      "paths": [
+        "fixtures/large/split.env"
+      ],
+      "address": "0x06ecd7e9a37b7bba567be31a4bb227eda970dd00",
+      "value_offset_bytes": 65504,
+      "boundary_bytes": 65536,
+      "assertion": "candidate crosses 64 KiB; overlap coverage must be configured by test harness"
+    },
+    {
+      "id": "branch_only",
+      "paths": [
+        "fixtures/branch-only.env"
+      ],
+      "address": "0x072ceecb1a9c75f6f8e5c9c6ad375345a4ac0f2e",
+      "ref": "refs/heads/fixture/branch-only"
+    },
+    {
+      "id": "pr_only",
+      "paths": [
+        "fixtures/pr-only.env"
+      ],
+      "address": "0x7bd3b3c1bc631b96a5441f29c74b469792bbefc0",
+      "ref": "refs/heads/fixture/pr-only",
+      "assertion": "reachable from branch and PR refs; do not count duplicate observations as unique candidates"
+    },
+    {
+      "id": "binary",
+      "paths": [
+        "fixtures/negative/binary.dat"
+      ],
+      "address": "0xb151ec161ad15803e05f3b95cde62782d71cc615",
+      "assertion": "NUL/non-UTF8 bytes; verify actual binary policy"
+    },
+    {
+      "id": "long_hex",
+      "paths": [
+        "fixtures/negative/long-hex.txt"
+      ],
+      "assertion": "one 96-hex token; no false 64-hex sub-match"
+    },
+    {
+      "id": "invalid_scalars",
+      "paths": [
+        "fixtures/negative/invalid-scalars.env"
+      ],
+      "assertion": "zero / curve order / overflow are not valid EVM scalars"
+    },
+    {
+      "id": "identity_drop",
+      "paths": [
+        "fixtures/negative/identity.json"
+      ],
+      "address": "0x001cded09d2fb3344503a53e3ae1835dcb0d3377",
+      "assertion": "explicit transaction_hash identity context; DROP according to scanner policy"
+    },
+    {
+      "id": "unreachable",
+      "paths": [
+        "fixtures/unreachable.env"
+      ],
+      "address": "0xfc80daf0f497cecc7517556d1fcf2f91e8bf0e96",
+      "assertion": "no ref points to this commit; normal heads/tags/pull fetch must exclude its unique blob"
+    }
+  ],
+  "provider": "FakeEtherscanTransport only; no network chain provider",
+  "validation_status": "Corpus validated locally; scanner integration not run here."
+}
